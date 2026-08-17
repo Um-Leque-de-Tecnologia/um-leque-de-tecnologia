@@ -29,19 +29,27 @@ const posts = [
 
 export default function Articles() {
   return (
-    <section className="block" id="artigos">
-      <div className="head">
-        <div className="eyebrow">03 — Escrita</div>
-        <h2>Últimos artigos.</h2>
-        <p className="lead">
-          Textos sem pressa sobre desenvolvimento, dados e educação em
-          tecnologia — pra desdobrar ideias complexas uma lâmina de cada vez.
+    <section className="section" id="artigos">
+      <div data-reveal>
+        <div className="eyebrow">04 — Escrita</div>
+        <h2 className="h2">
+          Últimos <span className="grad-text">artigos</span>
+        </h2>
+        <p className="lead-2">
+          Textos sem pressa sobre desenvolvimento, dados e educação em tecnologia
+          — pra desdobrar ideias complexas uma lâmina de cada vez.
         </p>
       </div>
 
       <div className="articles">
-        {posts.map((post) => (
-          <a className="article" key={post.title} href={post.href}>
+        {posts.map((post, i) => (
+          <a
+            className="article"
+            key={post.title}
+            href={post.href}
+            data-reveal
+            style={{ ["--d" as string]: `${i * 0.08}s` }}
+          >
             <span className="tag">{post.tag}</span>
             <h3>{post.title}</h3>
             <p>{post.excerpt}</p>

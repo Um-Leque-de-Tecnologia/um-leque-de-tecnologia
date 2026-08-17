@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Fog from "@/components/fog";
+import Reveal from "@/components/reveal";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,13 +24,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    /* suppressHydrationWarning: o script abaixo altera a className do <html>
+       antes da hidratação, então servidor e cliente divergem de propósito. */
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        {/* Marca que há JS ANTES da primeira pintura. As entradas em fade só
+            escondem conteúdo sob .has-js — sem isso, JS bloqueado deixaria a
+            página em branco. Precisa ser inline e bloqueante: um efeito depois
+            da hidratação causaria um flash. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.classList.add('has-js')`,
+          }}
+        />
+      </head>
       <body>
-        <div className="ambient" aria-hidden="true">
-          <span className="glow magenta" />
-          <span className="glow purple" />
-        </div>
+        {/* Uma camada de névoa pra página inteira — nunca uma por seção. */}
+        <Fog />
         {children}
+        <Reveal />
       </body>
     </html>
   );

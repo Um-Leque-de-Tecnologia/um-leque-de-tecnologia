@@ -1,8 +1,11 @@
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
+import Marquee from "@/components/marquee";
 import About from "@/components/about";
-import Courses from "@/components/courses";
+import Chain from "@/components/chain";
+import Areas from "@/components/areas";
 import Articles from "@/components/articles";
+import Cta from "@/components/cta";
 import Footer from "@/components/footer";
 
 export default function Home() {
@@ -11,9 +14,12 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <Marquee />
         <About />
-        <Courses />
-        {/* <Articles /> */}
+        <Chain />
+        <Areas />
+        <Articles />
+        <Cta />
       </main>
       <Footer />
     </>
