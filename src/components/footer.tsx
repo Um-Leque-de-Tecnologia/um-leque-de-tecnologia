@@ -16,7 +16,7 @@ export default function Footer() {
 
           <nav className="social" aria-label="Redes sociais">
             <a
-              href="https://instagram.com/nickdeve"
+              href="https://instagram.com/lequedetecnologia"
               target="_blank"
               rel="noreferrer"
             >
