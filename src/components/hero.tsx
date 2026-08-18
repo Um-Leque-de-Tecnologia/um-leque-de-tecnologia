@@ -1,4 +1,4 @@
-import Logo from "@/components/logo";
+import HeroLogo from "@/components/hero-logo";
 
 const Arrow = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -63,7 +63,7 @@ export default function Hero() {
 
       <div className="hero-art" aria-hidden="true">
         <span className="halo" />
-        <Logo variant="lockup" width={500} />
+        <HeroLogo />
       </div>
     </section>
   );

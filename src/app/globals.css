@@ -71,8 +71,15 @@ body {
   /* clip (e não hidden) — hidden transformaria o body em contêiner de rolagem
      vertical e quebraria a névoa que transborda as seções */
   overflow-x: clip;
-  min-height: 100vh;
+
+  /* rodapé colado no fim: com pouco conteúdo o main estica e empurra o footer
+     pro rodapé da janela, em vez de deixar faixa vazia embaixo dele */
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
 }
+body > main { flex: 1 0 auto; }
+body > .footer { flex: none; }
 
 a { color: inherit; text-decoration: none; }
 img { display: block; }
@@ -113,31 +120,39 @@ img { display: block; }
 /* O componente passa --w por style inline, e estilo inline vence media query.
    Por isso a responsividade não pode ser "sobrescrever --w num @media" — ela
    precisa estar embutida aqui, limitando o valor recebido contra a viewport. */
+/* A altura vem de aspect-ratio, e o desenho é posicionado em % da própria
+   moldura. Nada de derivar altura de um calc() com a largura dentro: se esse
+   valor contiver 100%, na altura ele passa a significar 100% da altura do pai
+   — que depende dele mesmo. O cálculo fica circular e colapsa pra zero. */
 .mark, .lockup { position: relative; overflow: hidden; flex: none; }
-.mark img, .lockup img { position: absolute; max-width: none; }
+/* aceita <img> (navbar, rodapé) e <svg> inline (hero, onde as lâminas animam) */
+.mark img, .lockup img, .lockup svg {
+  position: absolute; max-width: none; height: auto;
+}
 
 .mark {
   --w: 52px;
-  --wc: min(var(--w), 22vw);
-  width: var(--wc);
-  height: calc(var(--wc) * 451 / 785);
+  /* sem 100% aqui: o pai (.brand) tem largura definida pelo conteúdo, então a
+     referência seria circular e a marca colapsava */
+  width: min(var(--w), 22vw);
+  aspect-ratio: 785 / 451;
 }
 .mark img {
-  width: calc(var(--wc) * 1080 / 785);
-  left: calc(var(--wc) * -147 / 785);
-  top: calc(var(--wc) * -339 / 785);
+  width: 137.5796%;    /* 1080/785 */
+  left: -18.7261%;     /*  -147/785 */
+  top: -75.1663%;      /*  -339/451, em % da altura da moldura */
 }
 
 .lockup {
   --w: 500px;
-  --wc: min(var(--w), 78vw);
-  width: var(--wc);
-  height: calc(var(--wc) * 722 / 956);
+  /* o 100% impede que a logo ultrapasse a coluna do grid e esprema o texto */
+  width: min(var(--w), 78vw, 100%);
+  aspect-ratio: 956 / 722;
 }
-.lockup img {
-  width: calc(var(--wc) * 1080 / 956);
-  left: calc(var(--wc) * -65 / 956);
-  top: calc(var(--wc) * -339 / 956);
+.lockup img, .lockup svg {
+  width: 112.9707%;    /* 1080/956 */
+  left: -6.7992%;      /*   -65/956 */
+  top: -46.9529%;      /*  -339/722, em % da altura da moldura */
 }
 
 /* ==========================================================================
@@ -244,8 +259,12 @@ img { display: block; }
    HERO
    ========================================================================== */
 .hero {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto;
-  gap: clamp(32px, 5vw, 60px); align-items: center;
+  display: grid;
+  /* Duas colunas flexíveis. Com `auto` na segunda, a logo reservava seus 500px
+     inteiros e o texto ficava com o resto — o H1 quebrava em quatro linhas e a
+     linha de números passava pra duas. */
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(32px, 4vw, 56px); align-items: center;
   max-width: var(--maxw); margin: 0 auto;
   padding: clamp(48px, 7vw, 92px) var(--pad-x) clamp(56px, 8vw, 104px);
 }
@@ -292,7 +311,20 @@ img { display: block; }
   animation: breathe 7s ease-in-out infinite;
 }
 .hero-art .lockup { animation: floaty 7s ease-in-out infinite; }
-.hero-art .lockup img { filter: drop-shadow(0 24px 62px rgba(231, 57, 130, 0.40)); }
+.hero-art .lockup img,
+.hero-art .lockup svg { filter: drop-shadow(0 24px 62px rgba(231, 57, 130, 0.40)); }
+
+/* Leque de mão: cada lâmina (.fanblade) gira o quanto diz seu --r. As da
+   esquerda têm --r:0 e são a haste fixa; as demais dobram pra cima-esquerda,
+   acima do wordmark pra não cobri-lo. Como o giro cresce da esquerda pra a
+   direita, o leque ABRE varrendo esquerda→direita e FECHA voltando. O símbolo
+   </> não é .fanblade, então fica parado. */
+@keyframes fanfold {
+  0%, 40%  { transform: rotate(0deg); }              /* aberto (repouso) */
+  70%      { transform: rotate(var(--r, 0deg)); }    /* dobrado à esquerda */
+  100%     { transform: rotate(0deg); }              /* reabre */
+}
+.fanblade { animation: fanfold 6s cubic-bezier(0.45, 0, 0.25, 1) infinite; }
 
 /* ==========================================================================
    ESTEIRA
@@ -642,7 +674,7 @@ img { display: block; }
   html { scroll-behavior: auto; }
 
   .fog span, .cta-fog span,
-  .hero-art .lockup, .hero-art .halo,
+  .hero-art .lockup, .hero-art .halo, .fanblade,
   .about .badge, .hero .pill i, .about .badge i,
   .marquee .track {
     animation: none !important;
