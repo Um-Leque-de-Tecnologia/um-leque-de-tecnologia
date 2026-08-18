@@ -76,7 +76,7 @@ export default function Cta() {
           <a className="btn btn-primary" href="#trilha">
             Começar pelos fundamentos <Arrow />
           </a>
-          <a className="btn btn-ghost" href="mailto:nicolyejady@gmail.com">
+          <a className="btn btn-ghost" href="mailto:umlequedetecnologia@gmail.com">
             Falar com a NickDev
           </a>
         </div>
