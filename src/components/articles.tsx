@@ -1,5 +1,9 @@
-// Artigos — conteúdo PLACEHOLDER. Substitua títulos, resumos, datas, tags e os
-// href pelos artigos reais (ou ligue a um CMS / arquivos MDX depois).
+// Artigos — conteúdo PLACEHOLDER. Substitua títulos, resumos, datas e tags
+// pelos artigos reais (ou ligue a um CMS / arquivos MDX depois).
+//
+// Os cards NÃO são clicáveis: todos estão "Em breve" e não há para onde levar.
+// Quando houver artigo publicado, envolver o card num <a> e devolver o realce
+// de hover em .article (globals.css).
 const posts = [
   {
     tag: "Frontend",
@@ -7,7 +11,6 @@ const posts = [
     excerpt:
       "Do endereço que você digita ao pixel na tela — uma volta sem jargão pra entender o que acontece por baixo.",
     date: "Em breve",
-    href: "#",
   },
   {
     tag: "Dados",
@@ -15,7 +18,6 @@ const posts = [
     excerpt:
       "O mínimo que você precisa pra sair do zero e fazer uma primeira análise que faz sentido.",
     date: "Em breve",
-    href: "#",
   },
   {
     tag: "Educação",
@@ -23,7 +25,6 @@ const posts = [
     excerpt:
       "O que funciona (e o que atrapalha) quando a sala é de transição de carreira.",
     date: "Em breve",
-    href: "#",
   },
 ];
 
@@ -43,10 +44,9 @@ export default function Articles() {
 
       <div className="articles">
         {posts.map((post, i) => (
-          <a
+          <article
             className="article"
             key={post.title}
-            href={post.href}
             data-reveal
             style={{ ["--d" as string]: `${i * 0.08}s` }}
           >
@@ -54,7 +54,7 @@ export default function Articles() {
             <h3>{post.title}</h3>
             <p>{post.excerpt}</p>
             <div className="date">{post.date}</div>
-          </a>
+          </article>
         ))}
       </div>
     </section>

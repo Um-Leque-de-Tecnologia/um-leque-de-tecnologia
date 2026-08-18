@@ -530,13 +530,13 @@ img { display: block; }
   display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px; margin-top: clamp(36px, 5vw, 56px);
 }
+/* Sem realce de hover: o card não é clicável enquanto os artigos estão "Em
+   breve". Levantar no hover prometeria um clique que não existe. */
 .article {
   display: flex; flex-direction: column;
   background: var(--surface); border: 1px solid var(--line);
   border-radius: 20px; padding: 26px 28px;
-  transition: transform 0.18s ease, border-color 0.18s ease;
 }
-.article:hover { transform: translateY(-4px); border-color: var(--purple); }
 .article .tag {
   font-family: var(--font-mono), monospace; font-size: 11.5px; letter-spacing: 0.06em;
   text-transform: uppercase; color: var(--purple-light);
@@ -557,13 +557,17 @@ img { display: block; }
    Pra baixo o transbordo continua longo, dissolvendo no rodapé. */
 .cta-fog {
   position: absolute;
-  /* .cta é uma .section (1240px centrados), então inset horizontal 0 prenderia
-     a névoa à coluna de conteúdo e deixaria duas bordas retas verticais.
-     calc(50% - 50vw) estende até as bordas da janela em qualquer largura. */
-  inset: 0 calc(50% - 50vw) -300px;
+  /* .cta é uma .section (largura máxima centrada), então inset horizontal 0
+     prenderia a névoa à coluna de conteúdo e deixaria duas bordas retas
+     verticais. calc(50% - 50vw) estende até as bordas da janela. */
+  inset: 0 calc(50% - 50vw) 0;
   z-index: -1;
   pointer-events: none; overflow: hidden;
 }
+/* Sem transbordo pra baixo: elemento absoluto conta pra área rolável, e os
+   300px que havia aqui passavam do fim do rodapé — sobrava uma faixa de fundo
+   embaixo dele ao rolar até o fim. Invisíveis, ainda por cima: o rodapé é preto
+   opaco e cobre tudo que passe da borda da seção. */
 .cta-fog span { position: absolute; border-radius: 50%; will-change: transform; animation: drift var(--dur, 26s) ease-in-out infinite alternate; animation-delay: var(--delay, 0s); }
 
 /* assento do texto — não é decoração: sem ele o lead some no rosa */
